@@ -4,12 +4,13 @@ import com.xzp.dao.MySQLConnect;
 import com.xzp.dao.XAddressDAO;
 import com.xzp.entity.Addresses;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+/**
+ * @Author XZP FROM SCU
+ */
 public class XAddressDAOImp implements XAddressDAO {
 
     private boolean flag;
@@ -17,6 +18,14 @@ public class XAddressDAOImp implements XAddressDAO {
    public XAddressDAOImp(Connection conn){
        this.conn = conn;
    }
+
+    /**
+     *
+     * @param aAddr
+     * @return boolean
+     * @throws SQLException
+     * @description 插入数据
+     */
     @Override
     public boolean doCreate(Addresses aAddr) throws SQLException {
         PreparedStatement stmt = null;
@@ -43,31 +52,90 @@ public class XAddressDAOImp implements XAddressDAO {
         return flag;
     }
 
+    /**
+     *
+     * @param aId
+     * @return Address
+     * @throws SQLException
+     * @description 单个ID选择
+     */
     @Override
     public Addresses selectAddrById(int aId) throws SQLException {
        PreparedStatement stmt = null;
        String sql = "SELECT * FROM address where id = ?";
-        Addresses res = null;
+        Addresses resAddr = null;
        try{
            stmt = this.conn.prepareStatement(sql);
            stmt.setInt(1,aId);
-          res = (Addresses) stmt.executeQuery();
+          ResultSet res  = stmt.executeQuery();
+         if(res.next()){
+             resAddr = new Addresses();
+             resAddr.setId(res.getInt(1));
+             resAddr.setProvince(res.getString(2));
+             resAddr.setCity(res.getString(3));
+             resAddr.setCounty(res.getString(4));
+             resAddr.setVillage(res.getString(5));
+             resAddr.setDetail(res.getString(6));
+         }
        }catch (SQLException e){
            Logger.getGlobal().warning(e.getMessage());
        }finally {
            stmt.close();
        }
+        return resAddr;
+    }
+
+    /**
+     *
+     * @param ids
+     * @return ArrayList
+     * @throws SQLException
+     * @description 多个id选择
+     */
+    @Override
+    public ArrayList<Addresses> selectAddrSById(int[] ids) throws SQLException {
+      ArrayList<Addresses> res = new ArrayList<Addresses>();
+       for(int i : ids){
+           res.add(selectAddrById(i));
+       }
         return res;
     }
 
-    @Override
-    public ArrayList<Addresses> selectAddrSById(int[] ids) throws SQLException {
-        return null;
-    }
-
+    /**
+     *
+     * @param aAddr
+     * @return boolean
+     * @throws SQLException
+     * @
+     */
     @Override
     public boolean doUpdate(Addresses aAddr) throws SQLException {
-        return false;
+        String sql1="DELETE FROM address WHERE id = ?";
+        String sql2 = "INSERT INTO address (id,province,city,county,village,detail) VALUES" +
+                "(?,?,?,?,?,?)";
+        PreparedStatement stmt = null;
+        try{
+            conn.setAutoCommit(false);
+            Savepoint save = conn.setSavepoint();
+            stmt = this.conn.prepareStatement(sql1);
+            stmt.setInt(1,aAddr.getId());
+            stmt.executeUpdate();
+            stmt = this.conn.prepareStatement(sql2);
+            stmt.setInt(1,aAddr.getId());
+            stmt.setString(2,aAddr.getProvince());
+            stmt.setString(3,aAddr.getCity());
+            stmt.setString(4,aAddr.getCounty());
+            stmt.setString(5,aAddr.getVillage());
+            stmt.setString(6,aAddr.getDetail());
+            stmt.executeUpdate();
+            conn.commit();
+        }catch (SQLException e) {
+            System.out.println("???");
+           conn.rollback();
+        }finally {
+            conn.setAutoCommit(true);
+        }
+        return true;
     }
 
     @Override
@@ -77,7 +145,7 @@ public class XAddressDAOImp implements XAddressDAO {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Addresses addr = new Addresses();
-        addr.setId(8);
+        addr.setId(13);
         addr.setCity("成都市");
         addr.setCounty("双流县");
         addr.setProvince("四川省");
@@ -85,8 +153,7 @@ public class XAddressDAOImp implements XAddressDAO {
         addr.setDetail("四川大学江安校区");
         XAddressDAO  a= new XAddressDAOImp(MySQLConnect.getConnection());
        try {
-           Addresses b = a.selectAddrById(11);
-           System.out.println(b.getDetail());
+           boolean b = a.doUpdate(addr);
        }catch (SQLException e){
            System.out.println("hash");
        }
