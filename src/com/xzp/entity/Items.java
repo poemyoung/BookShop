@@ -1,11 +1,11 @@
 package com.xzp.entity;
 
 public class Items {
-    public int getOrdered() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrdered(int ordered) {
+    public void setOrderId(int ordered) {
         this.orderId = ordered;
     }
 

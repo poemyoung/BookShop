@@ -44,7 +44,7 @@ public class XBooksDAOImp implements XBooksDAO {
         }finally {
             stmt.close();
         }
-        return Boolean.valueOf(this.flag);
+        return this.flag;
     }
 
     /**
@@ -71,7 +71,7 @@ public class XBooksDAOImp implements XBooksDAO {
         }finally {
             stmt.close();
         }
-        return  Boolean.valueOf(flag);
+        return flag;
     }
 
     /**
@@ -114,7 +114,7 @@ public class XBooksDAOImp implements XBooksDAO {
             this.conn.setAutoCommit(true);
             stmt.close();
         }
-        return Boolean.valueOf(this.flag);
+        return this.flag;
     }
 
     @Override

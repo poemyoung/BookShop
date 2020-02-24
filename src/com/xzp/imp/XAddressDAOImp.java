@@ -142,7 +142,7 @@ public class XAddressDAOImp implements XAddressDAO {
             conn.setAutoCommit(true);
             stmt.close();
         }
-        return Boolean.valueOf(flag);
+        return flag;
     }
 
     /**
@@ -169,6 +169,6 @@ public class XAddressDAOImp implements XAddressDAO {
            stmt.close();
            System.out.println(e.getMessage());
        }
-        return Boolean.valueOf(this.flag);
+        return this.flag;
     }
 }
