@@ -13,5 +13,4 @@ public interface XBooksDAO {
     public Books selectById(int aId) throws SQLException;
     public ArrayList<Books>selectByName(String name) throws SQLException;
     public ArrayList<Books>selectByPublisher(String publishName) throws SQLException;
-    public ArrayList<Books>selectByPriceScope(double min, double max) throws SQLException;
 }

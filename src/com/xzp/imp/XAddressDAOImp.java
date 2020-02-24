@@ -49,7 +49,7 @@ public class XAddressDAOImp implements XAddressDAO {
         }finally {
             stmt.close();
         }
-        return flag;
+        return Boolean.valueOf(flag);
     }
 
     /**
@@ -128,34 +128,47 @@ public class XAddressDAOImp implements XAddressDAO {
             stmt.setString(5,aAddr.getVillage());
             stmt.setString(6,aAddr.getDetail());
             stmt.executeUpdate();
-            conn.commit();
+           try {
+               conn.commit();
+               this.flag = true;
+           }catch (Exception e){
+               this.conn.rollback();
+               this.flag = false;
+           }
         }catch (SQLException e) {
-            System.out.println("???");
+            this.flag = false;
            conn.rollback();
         }finally {
             conn.setAutoCommit(true);
+            stmt.close();
         }
-        return true;
+        return Boolean.valueOf(flag);
     }
 
+    /**
+     *
+     * @param aId
+     * @return boolean
+     * @throws SQLException
+     * @description 删除地址记录
+     */
     @Override
     public boolean doDelete(int aId) throws SQLException {
-        return false;
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        Addresses addr = new Addresses();
-        addr.setId(13);
-        addr.setCity("成都市");
-        addr.setCounty("双流县");
-        addr.setProvince("四川省");
-        addr.setVillage("文星镇");
-        addr.setDetail("四川大学江安校区");
-        XAddressDAO  a= new XAddressDAOImp(MySQLConnect.getConnection());
+        PreparedStatement stmt = null;
+        String sql = "DELETE FROM address WHERE id = ?";
        try {
-           boolean b = a.doUpdate(addr);
+           stmt = this.conn.prepareStatement(sql);
+           stmt.setInt(1, aId);
+           int count = stmt.executeUpdate();
+           if(count > 0)
+           this.flag = true;
+           else{
+               this.flag = false;
+           }
        }catch (SQLException e){
-           System.out.println("hash");
+           stmt.close();
+           System.out.println(e.getMessage());
        }
+        return Boolean.valueOf(this.flag);
     }
 }

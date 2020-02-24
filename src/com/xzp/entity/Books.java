@@ -33,11 +33,11 @@ public class Books {
         this.image = image;
     }
 
-    public String getStock() {
+    public int getStock() {
         return stock;
     }
 
-    public void setStock(String stock) {
+    public void setStock(int stock) {
         this.stock = stock;
     }
 
@@ -45,7 +45,7 @@ public class Books {
     private String name = null;
     private String price = null;
     private String image = null;
-    private String stock = null;
+    private int stock = 0;
 
     public String getPublisher() {
         return publisher;
