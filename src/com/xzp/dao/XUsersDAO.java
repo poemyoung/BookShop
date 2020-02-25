@@ -11,10 +11,10 @@ import java.util.List;
 public interface XUsersDAO {
     public boolean doCreate(Users aUser) throws SQLException;
     public boolean doCheckLogin(String phone, String UserPwd) throws SQLException;
-    public boolean doUpdate(Users aUser) throws SQLException;
-    public Users selectById(int aId) throws SQLException;
-    public ArrayList <Users> selectAll()throws SQLException;
-    public Users selectByName(String aName) throws SQLException;
+    public Users selectByPhone(String phone) throws SQLException;
     public boolean doDelete(int aId);
     public boolean checkPhone(String phone);
+    public boolean updateName(int id, String userName);
+    public boolean updatePhone(int id, String userPhone);
+    public boolean updatePassword(int id, String pwd);
 }

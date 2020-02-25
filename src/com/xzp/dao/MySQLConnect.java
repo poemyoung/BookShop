@@ -27,14 +27,4 @@ public class MySQLConnect {
         return conn;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        String sql  = "INSERT INTO address (province,city,county,village,detail) VALUES" +
-                "(\"procince\",\"thiscity\",\"thiscounty\",\"iage\",\"thisdetail\")";
-        Connection conn = MySQLConnect.getConnection();
-        System.out.println(conn);
-        PreparedStatement stat =  null;
-        stat = conn.prepareStatement(sql);
-        int count = stat.executeUpdate();
-        System.out.println(count);
-    }
 }

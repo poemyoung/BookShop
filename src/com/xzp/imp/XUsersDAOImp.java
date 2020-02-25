@@ -16,8 +16,19 @@ public class XUsersDAOImp implements XUsersDAO {
    public  XUsersDAOImp(Connection con){
        this.conn = con;
    }
+
+    /**
+     *
+     * @param aUser
+     * @return
+     * @throws SQLException
+     * @description 用户注册
+     */
     @Override
     public boolean doCreate(Users aUser) throws SQLException {
+       if(checkPhone(aUser.getPhone())){
+           return false;
+       }
        String sql = "INSERT INTO users(name,password,phone) VALUES (?,?,?)";
        int count;
        Boolean flag = false;
@@ -37,43 +48,145 @@ public class XUsersDAOImp implements XUsersDAO {
         return flag;
     }
 
+    /**
+     *
+     * @param phone
+     * @param UserPwd
+     * @return
+     * @throws SQLException
+     * @description  登录检查
+     */
     @Override
     public boolean doCheckLogin(String phone, String UserPwd) throws SQLException {
-       String sql = "SELECT * FROM users WHERE phone = ?";
-
+       String sql = "SELECT password FROM users WHERE phone = ?";
+       Boolean flag = false;
        try(PreparedStatement stmt = this.conn.prepareStatement(sql)){
            stmt.setString(1,phone);
-
+           ResultSet set = stmt.executeQuery();
+           if(set.next()){
+               String pwd = set.getString(1);
+               if(pwd.equals(UserPwd)){
+                   flag = true;
+               }
+           }
+       }catch (SQLException e){
+           System.out.println(e.getMessage());
        }
 
-        return false;
+        return flag;
+    }
+
+    /**
+     *
+     * @param userName
+     * @return boolean
+     * @description 更新昵称
+     */
+
+    @Override
+    public boolean updateName(int id, String userName) {
+        String sql = "UPDATE users SET name=? WHERE id=?";
+        Boolean flag = false;
+        try(PreparedStatement stmt  = this.conn.prepareStatement(sql)){
+            stmt.setString(1, userName);
+            stmt.setInt(2,id);
+            int count = stmt.executeUpdate();
+            if(count > 0){
+                flag = true;
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return flag;
     }
 
     @Override
-    public boolean doUpdate(Users aUser) throws SQLException {
-        return false;
+    public boolean updatePassword(int id, String pwd) {
+        String sql = "UPDATE users SET password=? WHERE id=?";
+        Boolean flag = false;
+        try(PreparedStatement stmt  = this.conn.prepareStatement(sql)){
+            stmt.setString(1,pwd);
+            stmt.setInt(2,id);
+            int count = stmt.executeUpdate();
+            if(count > 0){
+                flag = true;
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return flag;
     }
 
     @Override
-    public Users selectById(int aId) throws SQLException {
-        return null;
+    public boolean updatePhone(int id, String userPhone) {
+        String sql = "UPDATE users SET phone=? WHERE id=?";
+        Boolean flag = false;
+        try(PreparedStatement stmt  = this.conn.prepareStatement(sql)){
+            stmt.setString(1,userPhone);
+            stmt.setInt(2,id);
+            int count = stmt.executeUpdate();
+            if(count > 0){
+                flag = true;
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return flag;
     }
 
+    /**
+     *
+     * @param phone
+     * @return
+     * @throws SQLException
+     * @description 按照id查找用户，即登录
+     */
     @Override
-    public ArrayList<Users> selectAll() throws SQLException {
-        return null;
+    public Users selectByPhone(String phone)  {
+        String sql = "SELECT * FROM users WHERE phone = ?";
+        Users aUser = null;
+        try(PreparedStatement stmt = this.conn.prepareStatement(sql)){
+            stmt.setString(1,phone);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()){
+                aUser = new Users();
+                aUser.setId(res.getInt(1));
+                aUser.setName(res.getString(2));
+                aUser.setPassword(res.getString(3));
+                aUser.setPhone(res.getString(4));
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return aUser;
     }
 
-    @Override
-    public Users selectByName(String aName) throws SQLException {
-        return null;
-    }
-
+    /**
+     *
+     * @param aId
+     * @return
+     * @description 用户注销
+     */
     @Override
     public boolean doDelete(int aId) {
-        return false;
+        String sql = "DELETE FROM users WHERE id=?";
+        Boolean flag = false;
+        try(PreparedStatement stmt = this.conn.prepareStatement(sql)){
+            stmt.setInt(1,aId);
+            int count = stmt.executeUpdate();
+            if(count > 0){
+                flag = true;
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return flag;
     }
 
+    /**
+     * @param phone
+     * @return 如果已存在用户返回true，不存在该用户返回false
+     */
     @Override
     public boolean checkPhone(String phone){
        Boolean flag = false;
@@ -90,12 +203,4 @@ public class XUsersDAOImp implements XUsersDAO {
        return flag;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        XUsersDAOImp test = new XUsersDAOImp(MySQLConnect.getConnection());
-        Users auser = new Users();
-        auser.setName("Xu Zepeng");
-        auser.setPassword("123456");
-        auser.setPhone("13558540729");
-       System.out.println(test.doCreate(auser));
-    }
 }
