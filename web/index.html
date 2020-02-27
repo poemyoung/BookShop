@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图书商城</title>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="node_modules/vue.js"></script>
+    <script src="node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+<div class="jumbotron">
+    <div class="container">
+        <p>欢迎来到在线图书购物商城！</p>
+    </div>
+</div>
+<div class="well">
+    <nav class="nav nav-tabs" role="navigation">
+       <li role="presentation" class="active"><a href="#">书城</a> </li>
+        <li role="presentation"><a href="#">购物车</a> </li>
+        <li role="presentation"><a href="#">我的</a> </li>
+     </nav>
+</div>
+<ul id="bookUl" class="list-group">
+    <li v-for="book in books">{{book.name}}</li>
+</ul>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el:'#bookUl',
+        data:{
+            books:[
+                {name:'java核心技术'},
+                {name:'Efffective Java'},
+                {name:'web实战'}
+            ]
+        }
+    })
+</script>
+</body>
+</html>
