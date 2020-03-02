@@ -16,9 +16,9 @@
 </div>
 <div class="well">
     <nav class="nav nav-tabs" role="navigation">
-       <li role="presentation" class="active"><a href="#">书城</a> </li>
+       <li role="presentation" class="active"><a href="javascript:;">书城</a> </li>
         <li role="presentation"><a href="#">购物车</a> </li>
-        <li role="presentation"><a href="#">我的</a> </li>
+        <li role="presentation"><a href="./login/myui">我的</a> </li>
      </nav>
 </div>
 <div id="bookUl" >
@@ -33,9 +33,9 @@
 </div>
     <nav aria-label="Page Navigation" class="col-md-12" style="margin: 1px auto;display: inline-block;text-align: center">
     <ul class="pagination">
-       <li><a href="javascript:void(0)" aria-label="Previous" @click="back"><<</a></li>
-        <li v-for="page in pages"><a v-bind:id="'page'+page.num" href="javascript:void(0)" @click="pageChange(page.num)">{{page.num}}</a> </li>
-        <li><a href="#" @click="forward" aria-label="Next">>></a>
+       <li><a href="javascript:;" aria-label="Previous" @click="back"><<</a></li>
+        <li v-for="page in pages"><a v-bind:id="'page'+page.num" href="javascript:;" @click="pageChange(page.num)">{{page.num}}</a> </li>
+        <li><a href="javascript:;" @click="forward" aria-label="Next">>></a>
             </li>
     </ul>
     </nav>
@@ -71,7 +71,7 @@
                 this.pageNo = pageNum;
             },
             back:function () {
-                if(this.pageNo=1){
+                if(this.pageNo==1){
                     alert("第一页");
                 }else
                 this.pageNo -=1;
