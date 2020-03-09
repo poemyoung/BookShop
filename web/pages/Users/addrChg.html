@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>修改地址</title>
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div id="addrForm" style="display: flex;flex-direction: column;width: 50%;margin: 10% auto;">
+    <div class="input-group">
+        <span  class="input-group-addon" id="basic-addon1">省</span>
+        <input v-model="province" type="text" class="form-control" placeholder="请输入地址所在省" aria-describedby="basic-addon1" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon2">市</span>
+        <input v-model="city" type="text" class="form-control" placeholder="请输入地址所在市" aria-describedby="basic-addon2" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon3">县</span>
+        <input v-model="county" type="text" class="form-control" placeholder="请输入地址所在县" aria-describedby="basic-addon3" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon4">乡</span>
+        <input v-model="village" type="text" class="form-control" placeholder="请输入地址所在乡" aria-describedby="basic-addon4" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon5">详细地址</span>
+        <input v-model="detail" type="text" class="form-control" placeholder="请输入详细地址" aria-describedby="basic-addon5" />
+    </div>
+    <button @click="subUp" class="btn-lg">确定修改</button>
+</div>
+<style>
+    div{
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+</style>
+<script type="text/javascript">
+    var addrChage = new Vue({
+        el:addrForm,
+        data:{
+            province:null,
+            city:null,
+            county:null,
+            village:null,
+            detail:null
+        },
+        methods:{
+            subUp:function () {
+                console.log(this.province)
+            }
+        }
+    })
+</script>
+</body>
+</html>

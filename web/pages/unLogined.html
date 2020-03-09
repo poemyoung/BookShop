@@ -21,7 +21,7 @@
         </div>
         <div class="input-group input-group-lg">
             <span class="input-group-addon" >密码</span>
-        <input id="p" type="text" class="form-control" v-model="password" name="password" placeholder="Your password" aria-describedby="sizing-addon1"/>
+        <input id="p" type="password" class="form-control" v-model="password" name="password" placeholder="Your password" aria-describedby="sizing-addon1"/>
         </div>
         <div class="checkbox">
             <label><input type="checkbox"  name="isRemember">记住我</label>
@@ -58,6 +58,7 @@
                 el.preventDefault();
             },
             whenSubmit:function () {
+                var phoneNumber = this.phone;
                 $.ajax({
                     type:"POST",
                     url:"./../login/logincheck",
@@ -66,9 +67,9 @@
                         alert("请求失败！")
                     },
                     success:function (data) {
-                       console.log(data);
                         if(data == "success"){
                             console.log("success");
+                            window.location.href="./logined.html?phone="+phoneNumber;
                         }
                         else {
                             console.log("fail");
