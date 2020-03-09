@@ -176,7 +176,7 @@ public class XBooksDAOImp implements XBooksDAO {
     public ArrayList<Books> selectByPublisher(String publishName) throws SQLException {
         PreparedStatement stmt  = null;
         String sql =  "SELECT * FROM books WHERE publisher = ?";
-        ArrayList<Books> bks = new ArrayList<Books>();
+        ArrayList<Books> bks = new ArrayList<>();
         try{
             stmt = this.conn.prepareStatement(sql);
             stmt.setString(1,publishName);
@@ -197,5 +197,46 @@ public class XBooksDAOImp implements XBooksDAO {
             stmt.close();
         }
         return bks;
+    }
+
+    @Override
+    public ArrayList<Books> selectByIdRange(int start, int end) throws SQLException {
+        ArrayList<Books> bks = new ArrayList<>();
+        String sql = "SELECT * FROM books WHERE id>=? AND id<=?";
+        try(PreparedStatement stmt = this.conn.prepareStatement(sql)){
+            stmt.setInt(1,start);
+            stmt.setInt(2,end);
+            ResultSet res = stmt.executeQuery();
+            while (res.next()){
+                Books abk = new Books();
+                abk.setId(res.getInt(1));
+                abk.setName(res.getString(2));
+                abk.setPrice(res.getString(3));
+                abk.setImage(res.getString(4));
+                abk.setStock(res.getInt(5));
+                abk.setPublisher(res.getString(6));
+                bks.add(abk);
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }finally {
+
+        }
+        return bks;
+    }
+
+    @Override
+    public int doCountAll() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM books";
+        int all = 0;
+        try (PreparedStatement stmt = this.conn.prepareStatement(sql)) {
+            ResultSet res = stmt.executeQuery();
+            if (res.next()) {
+                all = res.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return all;
     }
 }

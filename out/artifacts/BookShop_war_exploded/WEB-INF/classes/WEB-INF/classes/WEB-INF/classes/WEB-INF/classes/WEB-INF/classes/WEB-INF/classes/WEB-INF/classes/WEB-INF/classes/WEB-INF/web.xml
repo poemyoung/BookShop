@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <servlet>
-        <servlet-name>userinfoaction</servlet-name>
-        <servlet-class>com.xt.servlet.UserinfoAction</servlet-class>
+        <servlet-name>pagebooks</servlet-name>
+        <servlet-class>com.xzp.servlet.PageBooks</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>userinfoaction</servlet-name>
-        <url-pattern>/UserinfoAction</url-pattern>
+        <servlet-name>pagebooks</servlet-name>
+        <url-pattern>/pagebooks</url-pattern>
     </servlet-mapping>
 </web-app>

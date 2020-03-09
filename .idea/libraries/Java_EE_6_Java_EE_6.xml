@@ -10,6 +10,8 @@
       <root url="jar://$PROJECT_DIR$/lib/javax.ejb.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jsp.jstl.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javax.servlet.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/fastjson-1.2.62.jar!/" />
+      <root url="jar://$USER_HOME$/Library/Tomcat/lib/fastjson-1.2.62.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

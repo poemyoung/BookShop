@@ -13,4 +13,6 @@ public interface XBooksDAO {
     public Books selectById(int aId) throws SQLException;
     public ArrayList<Books>selectByName(String name) throws SQLException;
     public ArrayList<Books>selectByPublisher(String publishName) throws SQLException;
+    public ArrayList<Books>selectByIdRange(int start,int end) throws SQLException;
+    public int doCountAll() throws SQLException;
 }
