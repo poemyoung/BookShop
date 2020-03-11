@@ -15,23 +15,23 @@
 <div id="addrForm" style="display: flex;flex-direction: column;width: 50%;margin: 10% auto;">
     <div class="input-group">
         <span  class="input-group-addon" id="basic-addon1">省</span>
-        <input v-model="province" type="text" class="form-control" placeholder="请输入地址所在省" aria-describedby="basic-addon1" />
+        <input id="inp1" v-model="province" type="text" class="form-control" placeholder="请输入地址所在省" aria-describedby="basic-addon1" />
     </div>
     <div class="input-group">
         <span class="input-group-addon" id="basic-addon2">市</span>
-        <input v-model="city" type="text" class="form-control" placeholder="请输入地址所在市" aria-describedby="basic-addon2" />
+        <input id="inp2" v-model="city" type="text" class="form-control" placeholder="请输入地址所在市" aria-describedby="basic-addon2" />
     </div>
     <div class="input-group">
         <span class="input-group-addon" id="basic-addon3">县</span>
-        <input v-model="county" type="text" class="form-control" placeholder="请输入地址所在县" aria-describedby="basic-addon3" />
+        <input id="inp3" v-model="county" type="text" class="form-control" placeholder="请输入地址所在县" aria-describedby="basic-addon3" />
     </div>
     <div class="input-group">
         <span class="input-group-addon" id="basic-addon4">乡</span>
-        <input v-model="village" type="text" class="form-control" placeholder="请输入地址所在乡" aria-describedby="basic-addon4" />
+        <input id="inp4" v-model="village" type="text" class="form-control" placeholder="请输入地址所在乡" aria-describedby="basic-addon4" />
     </div>
     <div class="input-group">
         <span class="input-group-addon" id="basic-addon5">详细地址</span>
-        <input v-model="detail" type="text" class="form-control" placeholder="请输入详细地址" aria-describedby="basic-addon5" />
+        <input id="inp5" v-model="detail" type="text" class="form-control" placeholder="请输入详细地址" aria-describedby="basic-addon5" />
     </div>
     <button @click="subUp" class="btn-lg">确定修改</button>
 </div>
@@ -53,7 +53,52 @@
         },
         methods:{
             subUp:function () {
-                console.log(this.province)
+                var that = this;
+                if(that.province == null) {
+                    alert("请输入省！");
+                    document.getElementById("inp1").focus();
+                    return;
+                }
+                if(that.city == null) {
+                    alert("请输入市！");
+                    document.getElementById("inp2").focus();
+                    return;
+                }
+                if(that.county == null) {
+                    alert("请输入县！");
+                    document.getElementById("inp3").focus();
+                    return;
+                }
+                if(that.village == null) {
+                    alert("请输入乡！");
+                    document.getElementById("inp4").focus();
+                    return;
+                }
+                if(that.detail == null) {
+                    alert("请输入详细地址！");
+                    document.getElementById("inp5").focus();
+                    return;
+                }
+
+                var stringArgs = window.location.search;
+                var addrId  = stringArgs.split("=")[1];
+                var phone = stringArgs.split("=")[2];
+                var para = "addrId="+addrId+"&province="+that.province+"&city="+that.city+"&county="+that.county+"&village="+that.village+"&detail="+that.detail;
+               axios
+                .get("./../../info/addrchange?"+para)
+                .then(function (response) {
+                        if(response.data == "fail"){
+                            alert("Permission Denied!")
+                        }
+                        if(response.data == "success"){
+                            alert("修改成功！");
+                           var href = document.referrer;
+                           window.location.href=href;
+                        }
+                })
+                .catch(function (err) {
+                    console.log(err);
+                })
             }
         }
     })

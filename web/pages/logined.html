@@ -42,7 +42,7 @@
                 <td>{{address.village}}</td>
                 <td>{{address.detail}}</td>
                <td class="btn-group">
-                   <button class="btn-sm" style="background: #cac8c8"><a v-bind:href="'Users/addrChg.html?addrId='+address.addrId">修改</a></button>
+                   <button class="btn-sm" style="background: #cac8c8"><a :href="'Users/addrChg.html?addrId='+address.addrId">修改</a></button>
                    <button class="btn-sm" style="background: #cac8c8" @click="addrDel">删除</button>
                </td>
             </tr>
@@ -92,7 +92,7 @@
             .get("./../login/UserMsg?phone="+value)
             .then(function (response) {
                 if(response.data == "fail"){
-
+                    console.log("fail");
                 }else {
                     that.addresses = response.data.address;
                     that.phone = response.data.phone;

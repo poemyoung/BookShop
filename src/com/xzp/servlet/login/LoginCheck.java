@@ -62,11 +62,14 @@ public class LoginCheck extends HttpServlet {
             out.write(e.getMessage());
             return;
         }
+        Cookie cookie1 = new Cookie("phone",user.getPhone()+"");
         if(isRemember){
-            Cookie cookie1 = new Cookie("phone",user.getPhone()+"");
             cookie1.setMaxAge(1000);
-            resp.addCookie(cookie1);
+        }else {
+            cookie1.setMaxAge(-1);
         }
+        cookie1.setPath("/BookShop_war_exploded/index.html");
+        resp.addCookie(cookie1);
     }
 
     @Override

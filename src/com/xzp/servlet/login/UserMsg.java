@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.CollationKey;
 import java.util.ArrayList;
 
 @WebServlet("/login/UserMsg")
@@ -31,22 +32,18 @@ public class UserMsg extends HttpServlet {
        resp.setContentType("text/html;charset=utf-8");
         String phone = req.getParameter("phone");
         PrintWriter out = resp.getWriter();
+        Boolean flag = false;
         Cookie[] cookies = req.getCookies();
-        if(cookies == null){
-            out.write("fail");
-            return;
-        }
         for (int i = 0;cookies != null&&i < cookies.length;i++){
           String name = cookies[i].getName();
            String value = cookies[i].getValue();
-           if(name == "phone"){
-               if(value==phone){
-                   continue;
-               }else {
-                   out.write("fail");
-                   return;
-               }
+           if(name.equals("phone")&&value.equals(phone)){
+               flag = true;
            }
+        }
+        if(flag == false){
+            out.write("fail");
+            return;
         }
         Users aUser = new Users();
        try{
@@ -77,8 +74,10 @@ public class UserMsg extends HttpServlet {
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
+        StringBuffer addrsCookie =new StringBuffer();
         for (Addresses a:addrs){
             JSONObject aObj = new JSONObject();
+            addrsCookie.append(a.getId()+"_");
             aObj.put("province",a.getProvince());
             aObj.put("city",a.getCity());
             aObj.put("county",a.getCounty());
@@ -87,6 +86,10 @@ public class UserMsg extends HttpServlet {
             aObj.put("addrId",a.getId());
             jArr.add(aObj);
         }
+        Cookie cookie2 = new Cookie("addrs",addrsCookie.toString());
+        cookie2.setMaxAge(-1);
+        cookie2.setPath("/BookShop_war_exploded/index.html");
+        resp.addCookie(cookie2);
         jObj.put("address",jArr);
         out.write(jObj.toJSONString());
         out.close();
