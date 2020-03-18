@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface XAddressDAO {
-    public boolean doCreate(Addresses aAddr) throws SQLException;
+    public int doCreate(Addresses aAddr) throws SQLException;
     public Addresses selectAddrById(int aId) throws SQLException;
     public ArrayList<Addresses> selectAddrSById(int[] ids) throws SQLException;
     public boolean doUpdate(Addresses aAddr) throws SQLException;

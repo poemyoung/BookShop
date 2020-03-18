@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>新增地址</title>
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div id="addrNew" style="display: flex;flex-direction: column;width: 50%;margin: 10% auto;">
+    <div class="input-group">
+        <span  class="input-group-addon" id="basic-addon1">省</span>
+        <input id="inp1" v-model="province" type="text" class="form-control" placeholder="请输入地址所在省" aria-describedby="basic-addon1" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon2">市</span>
+        <input id="inp2" v-model="city" type="text" class="form-control" placeholder="请输入地址所在市" aria-describedby="basic-addon2" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon3">县</span>
+        <input id="inp3" v-model="county" type="text" class="form-control" placeholder="请输入地址所在县" aria-describedby="basic-addon3" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon4">乡</span>
+        <input id="inp4" v-model="village" type="text" class="form-control" placeholder="请输入地址所在乡" aria-describedby="basic-addon4" />
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon5">详细地址</span>
+        <input id="inp5" v-model="detail" type="text" class="form-control" placeholder="请输入详细地址" aria-describedby="basic-addon5" />
+    </div>
+    <button @click="subUp" class="btn-lg">新增地址</button>
+</div>
+<style>
+    div{
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+</style>
+<script type="text/javascript">
+    var addrinsert = new Vue({
+            el: addrNew,
+            data: {
+                province: null,
+                city: null,
+                county: null,
+                village: null,
+                detail: null
+            },
+            methods: {
+                subUp: function () {
+                    var that = this;
+                    if (that.province == null) {
+                        alert("请输入省！");
+                        document.getElementById("inp1").focus();
+                        return;
+                    }
+                    if (that.city == null) {
+                        alert("请输入市！");
+                        document.getElementById("inp2").focus();
+                        return;
+                    }
+                    if (that.county == null) {
+                        alert("请输入县！");
+                        document.getElementById("inp3").focus();
+                        return;
+                    }
+                    if (that.village == null) {
+                        alert("请输入乡！");
+                        document.getElementById("inp4").focus();
+                        return;
+                    }
+                    if (that.detail == null) {
+                        alert("请输入详细地址！");
+                        document.getElementById("inp5").focus();
+                        return;
+                    }
+
+                    var stringArgs = window.location.search;
+                    var phone  = stringArgs.split("=")[1];
+                    var para = "phone="+phone+"&province="+that.province+"&city="+that.city+"&county="+that.county+"&village="+that.village+"&detail="+that.detail;
+                    axios
+                        .get("./../../info/addrnew?"+para)
+                        .then(function (response) {
+                            if(response.data == "fail"){
+                                alert("Permission Denied!")
+                            }
+                            if(response.data == "success"){
+                                var href = document.referrer;
+                                window.location.href=href;
+                            }
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                        })
+                }
+            }
+        })
+</script>
+</body>
+</html>

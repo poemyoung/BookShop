@@ -27,18 +27,23 @@ public class XAddressDAOImp implements XAddressDAO {
      * @description 插入数据
      */
     @Override
-    public boolean doCreate(Addresses aAddr) throws SQLException {
+    public int doCreate(Addresses aAddr) throws SQLException {
+        int id = 0;
         PreparedStatement stmt = null;
         String sql = "INSERT INTO address (province,city,county,village,detail) VALUES" +
                 "(?,?,?,?,?)";
         try{
-            stmt = this.conn.prepareStatement(sql);
+            stmt = this.conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1,aAddr.getProvince());
             stmt.setString(2,aAddr.getCity());
             stmt.setString(3,aAddr.getCounty());
             stmt.setString(4,aAddr.getVillage());
             stmt.setString(5,aAddr.getDetail());
             int count = stmt.executeUpdate();
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if(generatedKeys.next()){
+                id = generatedKeys.getInt(1);
+            }
             if(count > 0){
                 flag = true;
             }else {
@@ -49,7 +54,7 @@ public class XAddressDAOImp implements XAddressDAO {
         }finally {
             stmt.close();
         }
-        return Boolean.valueOf(flag);
+        return id;
     }
 
     /**

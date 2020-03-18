@@ -18,7 +18,7 @@
     <nav class="nav nav-tabs" role="navigation">
        <li role="presentation" class="active"><a href="javascript:;">书城</a> </li>
         <li role="presentation"><a href="#">购物车</a> </li>
-        <li role="presentation"><a href="./login/myui">我的</a> </li>
+        <li role="presentation"><a onclick="checkCookie()">我的</a> </li>
      </nav>
 </div>
 <div id="bookUl" >
@@ -27,7 +27,7 @@
     <li style="list-style: none;" class="col-md-4" v-for="book in books">
         <img v-bind:src="book.image" style="width: 32vmin;height: 46vmin;"/>
         <p><br>{{book.name}}</p>
-        <p style="color:red;">¥{{book.price}}</p>
+        <p style="color:#ff0000;">¥{{book.price}}</p>
     </li>
     </ul>
 </div>
@@ -95,6 +95,22 @@
             }
         }
     });
+
+    //点击，检查cookie函数
+    function checkCookie() {
+        axios
+            .get("./login/myui")
+            .then(function (response) {
+                if(response.data =="fail"){
+                    window.location.href = "./pages/unLogined.html"
+                }else{
+                    window.location.href = "./pages/logined.html?phone="+response.data;
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+            })
+    }
 
 
 

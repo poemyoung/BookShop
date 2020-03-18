@@ -1,7 +1,6 @@
 package com.xzp.servlet.info;
 
 import com.xzp.entity.Addresses;
-import com.xzp.entity.Users;
 import com.xzp.factory.DAOFactory;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 @WebServlet("/info/addrchange")
 public class AddrChange extends HttpServlet {
@@ -27,17 +25,22 @@ public class AddrChange extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
+        //接收参数
         String addrId = req.getParameter("addrId");
         String province = req.getParameter("province");
         String city = req.getParameter("city");
         String county = req.getParameter("county");
         String village = req.getParameter("village");
         String detail  = req.getParameter("detail");
+        //获取cookies
         Cookie[] cookies = req.getCookies();
-        Boolean flag = false;
+        //用于判断用户权限
+        boolean flag = false;
+        //无权限，跳转至登录界面
         if(cookies == null){
             out.write(req.getContextPath());
         }
+        //获取cookie中的地址，以下划线分割
         for(int i = 0;cookies!=null&&i<cookies.length;i++){
             String name = cookies[i].getName();
             String value = cookies[i].getValue();
@@ -51,18 +54,21 @@ public class AddrChange extends HttpServlet {
                }
             }
         }
+        //没有权限，请求失败
         if(flag == false){
             out.write("fail");
             return;
         }
+        //组装地址的javaBean类存入数据库
         Addresses aAddr = new Addresses();
         aAddr.setProvince(province);
         aAddr.setCounty(county);
         aAddr.setCity(city);
         aAddr.setVillage(village);
         aAddr.setDetail(detail);
-        aAddr.setId(Integer.valueOf(addrId));
+        aAddr.setId(Integer.parseInt(addrId));
         Boolean f = false;
+        //存入地址的操作
        try{
            f = factory.getAddressDeal().doUpdate(aAddr);
        }catch (SQLException e){

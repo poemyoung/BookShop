@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录</title>
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+</head>
+<body style="background: #e2dede">
+<div class="container" style="margin-top: 100px">
+    <form @submit="dataChange"  id="loginForm" style="max-width:330px;padding: 15px;margin: 0 auto">
+        <h2 style="    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;">请登录</h2>
+        <div class="input-group input-group-lg">
+        <span class="input-group-addon">手机</span>
+        <input  id="ph" type="text" class="form-control" name="phone" v-model="phone" placeholder="Your phone" aria-describedby="sizing-addon1" />
+        </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" >密码</span>
+        <input id="p" type="password" class="form-control" v-model="password" name="password" placeholder="Your password" aria-describedby="sizing-addon1"/>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox"  name="isRemember">记住我</label>
+
+        </div>
+        <button  @click="whenSubmit" type="submit" class="btn btn-lg btn-primary btn-block">登录</button>
+        <a href="javascript:void(0)" style="float: right"><br />注册新账号</a>
+    </form>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript">
+
+    var vm = new Vue({
+        el:"#loginForm",
+        data:{
+            phone : "",
+            password : "",
+        },
+        methods:{
+            dataChange:function (el) {
+                if(this.phone == ""){
+                    alert("请输入手机号！");
+                    document.getElementById("ph").focus();
+
+                }else {
+                    if (this.password == "") {
+                        alert("请输入密码！");
+                        document.getElementById("p").focus();
+                    }else {
+                       el.preventDefault();
+                    }
+                }
+                el.preventDefault();
+            },
+            whenSubmit:function () {
+                var phoneNumber = this.phone;
+                $.ajax({
+                    type:"POST",
+                    url:"./../login/logincheck",
+                    data: $('#loginForm').serialize(),
+                    error:function () {
+                        alert("请求失败！")
+                    },
+                    success:function (data) {
+                        if(data == "success"){
+                            console.log("success");
+                            window.location.href="./logined.html?phone="+phoneNumber;
+                        }
+                        else {
+                            console.log("fail");
+                        }
+                    }
+                })
+            }
+        }
+
+    })
+</script>
+</body>
+</html>

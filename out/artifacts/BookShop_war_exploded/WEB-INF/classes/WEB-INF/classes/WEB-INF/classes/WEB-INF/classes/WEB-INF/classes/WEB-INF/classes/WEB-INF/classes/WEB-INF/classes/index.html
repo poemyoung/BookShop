@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:list-style="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>图书商城</title>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="node_modules/axios/dist/axios.js"></script>
+</head>
+<div class="jumbotron">
+    <div class="container">
+        <p>欢迎来到在线图书购物商城！</p>
+    </div>
+</div>
+<div class="well">
+    <nav class="nav nav-tabs" role="navigation">
+       <li role="presentation" class="active"><a href="javascript:;">书城</a> </li>
+        <li role="presentation"><a href="#">购物车</a> </li>
+        <li role="presentation"><a onclick="checkCookie()">我的</a> </li>
+     </nav>
+</div>
+<div id="bookUl" >
+<div class="container">
+    <ul class="row" >
+    <li style="list-style: none;" class="col-md-4" v-for="book in books">
+        <img v-bind:src="book.image" style="width: 32vmin;height: 46vmin;"/>
+        <p><br>{{book.name}}</p>
+        <p style="color:red;">¥{{book.price}}</p>
+    </li>
+    </ul>
+</div>
+    <nav aria-label="Page Navigation" class="col-md-12" style="margin: 1px auto;display: inline-block;text-align: center">
+    <ul class="pagination">
+       <li><a href="javascript:;" aria-label="Previous" @click="back"><<</a></li>
+        <li v-for="page in pages"><a v-bind:id="'page'+page.num" href="javascript:;" @click="pageChange(page.num)">{{page.num}}</a> </li>
+        <li><a href="javascript:;" @click="forward" aria-label="Next">>></a>
+            </li>
+    </ul>
+    </nav>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:'#bookUl',
+        data(){
+            return{
+                books : null,
+                pages: null,
+                pageNo:1
+        }},
+        created(){
+            axios
+            .get("./pagebooks?pageNo="+this.pageNo+"&pageNum=3")
+            .then(response=>(this.books=response.data))
+            .catch(function (err) {
+                console.log(err);
+            }),
+                axios
+                    .get('./pagenumbers?pageNum=3')
+                    .then(response=>(this.pages=response.data))
+                    .catch(function (err) {
+                        console.log(err);
+                    })
+        },
+        methods:{
+            pageChange:function (pageNum) {
+                document.getElementById("page"+pageNum).className='active';
+                this.pageNo = pageNum;
+            },
+            back:function () {
+                if(this.pageNo==1){
+                    alert("第一页");
+                }else
+                this.pageNo -=1;
+            },
+            forward:function () {
+                if(this.pageNo==this.pages.length){
+                    alert("最后一页了!");
+                }else {
+                    this.pageNo+=1;
+                }
+            }
+        },
+        watch:{
+            pageNo:function () {
+                axios
+                    .get("./pagebooks?pageNo="+this.pageNo+"&pageNum=3")
+                    .then(response=>(this.books=response.data))
+                    .catch(function (err) {
+                        console.log(err);
+                    })
+            }
+        }
+    });
+
+    //点击，检查cookie函数
+    function checkCookie() {
+        axios
+            .get("./login/myui")
+            .then(function (response) {
+                if(response.data =="fail"){
+                    window.location.href = "./pages/unLogined.html"
+                }else{
+                    window.location.href = "./pages/logined.html?phone="+response.data;
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+            })
+    }
+
+
+
+</script>
+</body>
+</html>

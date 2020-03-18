@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>个人中心</title>
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="../node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+<div id="mine">
+    <div class="jumbotron">
+        <h1 style="text-align: center;">Welcome,{{name}}</h1>
+        <a class="btn btn-primary btn-lg" style="background: green" href="../../index.html" role="button">
+            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+            返回首页
+        </a>
+    </div>
+    <div id="choose" class="nav nav-pills">
+        <li  role="presentation" :class="isActive" @click="addrDeal"><a href="#"> 我的收货地址</a></li>
+        <li role="presentation" :class="notActive" @click="phoneDeal"><a href="#"> 我的账号</a></li>
+    </div>
+    <div :style="{display:display}" class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">地址列表</div>
+        <div class="panel-body">
+            <button class="btn-sm btn-info" style="display: inline-block;text-align: center;" @click="newAddr">+ 新增地址</button>
+                <h3>收货地址如下</h3>
+        </div>
+
+        <!-- Table -->
+        <table  class="table">
+            <tr>
+                <td>省</td>
+                <td>市</td>
+                <td>县</td>
+                <td>乡</td>
+                <td>详细地址</td>
+              <td>操作</td>
+            </tr>
+            <tr v-for="address in addresses">
+                <td>{{address.province}}</td>
+                <td>{{address.city}}</td>
+                <td>{{address.county}}</td>
+                <td>{{address.village}}</td>
+                <td>{{address.detail}}</td>
+               <td class="btn-group">
+                   <button class="btn-sm" style="background: #cac8c8"><a :href="'Users/addrChg.html?addrId='+address.addrId">修改</a></button>
+                   <button class="btn-sm" style="background: #cac8c8"><a @click="addrDel(address.addrId)">删除</a></button>
+               </td>
+            </tr>
+        </table>
+
+    </div>
+    <div :style="{display:pDisplay}" class="panel panel-default">
+        <div class="panel-heading">账号</div>
+        <div class="panel-body"><h3>手机号已登录</h3></div>
+        <table class="table">
+            <tr>
+                <td>登录方式</td>
+                <td>登录账号</td>
+                <td>操作</td>
+            </tr>
+            <tr>
+                <td>手机登录</td>
+                <td>{{phone}}</td>
+                <td class="btn-group">
+                    <button class="btn-sm" @click="logout" style="background: #cac8c8">注销</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:"#mine",
+        data:{
+            addresses:null,
+            phone:null,
+            name:null,
+            display:"block",
+            isActive:"active",
+            notActive:"",
+            pDisplay:"none"
+        },
+        mounted:function () {
+           var that = this;
+            var args = window.location.search;
+            var stringArgs = args.split('=');
+            var value = stringArgs[1];
+            axios
+            .get("./../login/UserMsg?phone="+value)
+            .then(function (response) {
+                if(response.data == "fail"){
+                    console.log("fail");
+                }else {
+                    that.addresses = response.data.address;
+                    that.phone = response.data.phone;
+                    that.name = response.data.name;
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+            })
+        },
+        methods:{
+            addrDeal:function () {
+                this.isActive = "active";
+                this.notActive = "";
+                this.display="block";
+                this.pDisplay="none";
+            },
+            phoneDeal:function () {
+                this.isActive = "";
+                this.notActive = "active";
+                this.display="none";
+                this.pDisplay="block";
+            },
+            //新增
+            addrDel:function (addrId) {
+                let thatt = this;
+               let flag = window.confirm("确认删除？");
+               if(flag == true){
+                    axios
+                   .get(".././info/addrdel?addrId="+addrId)
+                   .then(function (response) {
+                       console.log(addrId);
+                        console.log(response.data);
+                        if(response.data == "success"){
+                            window.location.reload();
+                        }
+                   })
+               }else if(flag == false){
+
+               }else {
+                   console.log("This should be confirmed!");
+               }
+            },
+            newAddr:function () {
+                window.location.href = "Users/addrNew.html?phone="+this.phone;
+            },
+            //注销
+            logout:function () {
+                console.log("okk");
+                axios
+                .get(".././info/logout")
+                .then(function (response) {
+                    console.log(response.data);
+                })
+                window.location.href = "unLogined.html";
+            }
+        }
+
+    })
+</script>
+</body>
+</html>
