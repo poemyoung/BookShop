@@ -24,8 +24,9 @@
 <div id="bookUl" >
 <div class="container">
     <ul class="row" >
-    <li style="list-style: none;" class="col-md-4" v-for="book in books">
-        <img v-bind:src="book.image" style="width: 32vmin;height: 46vmin;"/>
+<!--        书籍显示-->
+    <li style="list-style: none;" class="col-md-4" v-for="book in books" @click="detail(book)">
+        <img v-bind:src="book.image" style="width: 32vmin;height: 46vmin;display: block"/>
         <p><br>{{book.name}}</p>
         <p style="color:#ff0000;">¥{{book.price}}</p>
     </li>
@@ -70,18 +71,24 @@
                 document.getElementById("page"+pageNum).className='active';
                 this.pageNo = pageNum;
             },
+            // 向后翻页
             back:function () {
                 if(this.pageNo==1){
                     alert("第一页");
                 }else
                 this.pageNo -=1;
             },
+            //向前翻页
             forward:function () {
                 if(this.pageNo==this.pages.length){
                     alert("最后一页了!");
                 }else {
                     this.pageNo+=1;
                 }
+            },
+            //点击进入详情页
+            detail:function (bk) {
+                window.location.href="pages/Buy/detail.html?id="+bk.id;
             }
         },
         watch:{
@@ -115,5 +122,10 @@
 
 
 </script>
+<style>
+    #bookUl>div>ul>li :hover{
+        box-shadow: 5px 5px 14px #33333385;
+    }
+</style>
 </body>
 </html>

@@ -69,6 +69,12 @@
                     success:function (data) {
                         if(data == "success"){
                             console.log("success");
+                            var search = window.location.search;
+                            var arr = search.split("=");
+                            if(arr[1] ==='buy'){
+                                history.go(-1);
+                                return;
+                            }
                             window.location.href="./logined.html?phone="+phoneNumber;
                         }
                         else {

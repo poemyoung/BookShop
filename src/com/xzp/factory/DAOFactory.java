@@ -44,4 +44,8 @@ public class DAOFactory {
             XUserAddrDAO uAddr = new XUsersAddrDAOImp(conn);
             return uAddr;
        }
+       public  XOrdersDAO getOrdersDeal(){
+        XOrdersDAO aOrder = new XOrdersDAOImp(conn);
+        return aOrder;
+       }
 }

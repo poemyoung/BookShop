@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>详情页</title>
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+    <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</head>
+<body>
+<a class="btn btn-primary btn-lg" style="background: green;margin-top: 2em;" href="../../index.html" role="button">
+    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+    返回首页
+</a>
+    <div id="bookDetail" style="display: flex;flex-direction: row;margin-left: 10em;margin-top: 5em;">
+        <img v-bind:src="imgUrl" style="    width: 34em;
+    height: 44em;"/>
+        <div style="margin-top: 15em;margin-left: 6em;">
+
+            <ul class="list-group" >
+                <li class="list-group-item">书名：{{name}}</li>
+                <li class="list-group-item">出版商：{{publisher}}</li>
+                <li class="list-group-item">价格：<span style="color: red">¥{{price}}</span></li>
+            </ul>
+            <div style="display: flex;flex-direction: row;margin: 3em auto;">
+                <button @click="minus" class="btn btn-sm btn-default glyphicon glyphicon-minus"></button>
+                <div style="margin-top:2px;box-sizing:border-box;margin-left:0;box-shadow: #928a8a 2px 2px 10px inset, #928a8a -2px -2px 10px inset;
+    width: 5em;
+    height: 2em;
+    background: #dedede;
+    text-align: center;
+color: red;padding-top: 2px">{{count}}</div>
+                <button @click="plus" class="btn btn-sm btn-default glyphicon glyphicon-plus"></button>
+            </div>
+            <button class="btn btn-lg btn-primary" style="margin-left: 3em" @click="buyInst">立即购买</button>
+            <button class="btn btn-lg btn-info" style="margin-left: 8em;">+ 加入购物车</button>
+        </div>
+
+    </div>
+</body>
+<script type="text/javascript">
+    const de = new Vue({
+        el:'#bookDetail',
+        data:{
+            publisher: null,
+            imgUrl: null,
+            name: null,
+            price: null,
+            id:null,
+            count:1
+        },
+        created(){
+            let para = window.location.search;
+            let paraString = para.split("=");
+            this.id = paraString[1];
+            let that = this;
+            axios
+            .get("../../findbook?bookId="+that.id+"&")
+            .then(function (response) {
+                console.log(response.data);
+                that.publisher = response.data.publisher;
+                that.imgUrl = "../../"+response.data.imgUrl;
+                that.name = response.data.name;
+                that.id = response.data.id;
+                that.price = response.data.price;
+            })
+        },
+        methods:{
+            //数量加一
+            plus:function(){
+                this.count++;
+            },
+            //数量减一
+            minus:function(){
+                this.count--;
+            },
+            buyInst:function () {
+                let that = this;
+                axios
+                .get("../../pay?bookId="+that.id+'&count='+that.count)
+                .then(function (response) {
+                    console.log(response.data);
+                    if(response.data === "success"){
+                        alert("购买成功！");
+                    }else {
+                        window.location.href="../unLogined.html?way=buy";
+                    }
+                })
+
+            }
+        }
+    })
+</script>
+</html>

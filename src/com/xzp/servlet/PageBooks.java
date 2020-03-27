@@ -37,9 +37,11 @@ public class PageBooks extends HttpServlet {
            String pageNum = req.getParameter("pageNum");
            int pN = Integer.parseInt(pageNo);
            int pNum = Integer.parseInt(pageNum);
+           //设置返回前端的格式
            resp.setContentType("text/html;charset=UTF-8");
            resp.setCharacterEncoding("UTF-8");
            XBooksDAO bookDeal = factory.getBooksDeal();
+           //计算数据库的书本总数
            int allBooks = bookDeal.doCountAll();
            PrintWriter out = resp.getWriter();
            if(pN<1){
@@ -58,6 +60,7 @@ public class PageBooks extends HttpServlet {
             jObj.put("image",bks.get(i).getImage());
             jObj.put("stock",bks.get(i).getStock());
             jObj.put("price",bks.get(i).getPrice());
+            jObj.put("id",bks.get(i).getId());
             jArr.add(jObj);
            }
            out.write(jArr.toJSONString());

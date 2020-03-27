@@ -55,4 +55,16 @@ public class Orders {
     public void setTotal_price(String total_price) {
         this.total_price = total_price;
     }
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", addrId=" + addrId +
+                ", count=" + count +
+                ", state=" + state +
+                ", total_price='" + total_price + '\'' +
+                '}';
+    }
 }
